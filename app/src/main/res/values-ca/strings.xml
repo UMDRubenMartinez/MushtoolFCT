@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mushtool</string>
+    <string name="home">Inici</string>
+    <string name="settings">Opcions</string>
+    <string name="search">Buscar</string>
+    <string name="myMushrooms">Setas Meves</string>
+    <string name="eat">Menjar</string>
+    <string name="learn">Aprendre</string>
+    <string name="comunity">Comunitat</string>
+    <string name="MushtoolWeb">Mushtool</string>
+</resources>
