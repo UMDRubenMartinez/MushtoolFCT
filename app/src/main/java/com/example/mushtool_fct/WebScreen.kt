@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -26,7 +27,7 @@ fun WebScreen(navController: NavController){
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("MUSHTOOL") },
+                title = { Text(text = stringResource(id = R.string.MushtoolWeb)) },
                 backgroundColor = Color(0xFF8BC34A),
                 actions = {
                     IconButton(onClick = { navController.navigate("settings") }) {

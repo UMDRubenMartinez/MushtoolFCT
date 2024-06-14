@@ -63,9 +63,9 @@ fun MyApp() {
                     )
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Folder, contentDescription = null) },
-                    selected = currentRoute == "myMushrooms",
-                    onClick = { navController.navigate("myMushrooms") },
+                    icon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    selected = currentRoute == "search",
+                    onClick = { navController.navigate("search") },
                     alwaysShowLabel = true,
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = Color.White,
@@ -75,9 +75,9 @@ fun MyApp() {
                     )
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Search, contentDescription = null) },
-                    selected = currentRoute == "search",
-                    onClick = { navController.navigate("search") },
+                    icon = { Icon(Icons.Default.Folder, contentDescription = null) },
+                    selected = currentRoute == "myMushrooms",
+                    onClick = { navController.navigate("myMushrooms") },
                     alwaysShowLabel = true,
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = Color.White,

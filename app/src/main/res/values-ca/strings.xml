@@ -4,9 +4,17 @@
     <string name="home">Inici</string>
     <string name="settings">Opcions</string>
     <string name="search">Buscar</string>
-    <string name="myMushrooms">Setas Meves</string>
+    <string name="myMushrooms">Bolets meus</string>
     <string name="eat">Menjar</string>
     <string name="learn">Aprendre</string>
     <string name="comunity">Comunitat</string>
     <string name="MushtoolWeb">Mushtool</string>
+    <string name="foundMushroom">Seta trobada</string>
+    <string name="whatIs">¿Que pot ser?</string>
+    <string name="eatMush">Menjar bolets</string>
+    <string name="eatNow">Menjar ara</string>
+    <string name="recipes">Receptari</string>
+    <string name="game">Joc</string>
+    <string name="mushFile">Fitxes dels bolets</string>
+    <string name="messages">Missatges</string>
 </resources>
