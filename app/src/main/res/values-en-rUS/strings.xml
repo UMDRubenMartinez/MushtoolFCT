@@ -9,4 +9,13 @@
     <string name="learn">Learn</string>
     <string name="comunity">Comunity</string>
     <string name="MushtoolWeb">Mushtool</string>
+    <string name="foundMushroom">Founded Mushroom</string>
+    <string name="whatIs">¿What is?</string>
+    <string name="eatMush">Eat mushrooms</string>
+    <string name="eatNow">Eat now</string>
+    <string name="recipes">Recipes</string>
+    <string name="game">Game</string>
+    <string name="mushFile">Files of Mushrooms</string>
+    <string name="messages">Messages</string>
+    <string name="mushPhotos">Mush Photos</string>
 </resources>

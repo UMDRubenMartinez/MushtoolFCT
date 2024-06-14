@@ -9,4 +9,15 @@
     <string name="comunity" tools:ignore="MissingTranslation">Comunidad</string>
     <string name="MushtoolWeb" tools:ignore="MissingTranslation">Mushtool</string>
     <string name="eat">Comer</string>
+    <string name="foundMushroom" tools:ignore="MissingTranslation">Seta encontrada</string>
+    <string name="whatIs" tools:ignore="MissingTranslation">¿Que puede ser?</string>
+    <string name="eatMush" tools:ignore="MissingTranslation">Comer Setas</string>
+    <string name="eatNow" tools:ignore="MissingTranslation">Comer ahora</string>
+    <string name="recipes" tools:ignore="MissingTranslation">Recetario</string>
+    <string name="game" tools:ignore="MissingTranslation">Juego</string>
+    <string name="mushScience" translatable="false">MushScience</string>
+    <string name="mushFile" tools:ignore="MissingTranslation">Fichas de las setas</string>
+    <string name="mushGlossary" tools:ignore="MissingTranslation" translatable="false">Mush Glossary</string>
+    <string name="messages" tools:ignore="MissingTranslation">Mensajes</string>
+    <string name="mushPhotos" tools:ignore="MissingTranslation">Mush Fotos</string>
 </resources>
