@@ -57,6 +57,7 @@ dependencies {
     implementation ("com.google.android.material:material:1.1.0-alpha10")
     implementation ("androidx.appcompat:appcompat:1.1.0")
     implementation ("androidx.constraintlayout:constraintlayout:2.0.0-beta2")
+    implementation ("com.google.android.gms:play-services-ads:23.1.0")
     implementation ("androidx.compose.material:material:1.6.7")
     implementation ("androidx.compose.ui:ui-tooling-preview:1.6.7")
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.8.1")
