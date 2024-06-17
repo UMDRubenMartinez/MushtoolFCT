@@ -36,12 +36,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.mushtool_fct.Data.NavRoute
+import com.google.android.gms.ads.MobileAds
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(navController: NavController) {
-    var context = LocalContext.current
+    MobileAds.initialize(LocalContext.current)
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -62,6 +64,8 @@ fun MainScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            AdMobBanner()
+
             val items = listOf(
                 NavRoute(Icons.Default.Search, stringResource(id = R.string.search),"search"),
                 NavRoute(Icons.Default.Folder, stringResource(id = R.string.myMushrooms),"myMushrooms"),

@@ -21,15 +21,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MobileAds.initialize(this) {}
         val idiomaGuardado = IdiomaManager.cargarIdiomaGuardado(this)
         IdiomaManager.actualizarIdioma(idiomaGuardado, this)
         setContent {
@@ -149,10 +156,20 @@ fun MyApp() {
         }
     }
 }
-    /*val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "home") {
-        composable("home") { MainScreen(navController) }
-        composable("myMushrooms") { MushroomScreen(navController) }
-    }*/
 
-
+@Composable
+fun AdMobBanner() {
+    val context = LocalContext.current
+    var adUnitId = "ca-app-pub-3940256099942544/6300978111"
+    AndroidView(
+        factory = {
+            val adView = AdView(context).apply {
+                setAdSize(AdSize.BANNER)
+                this.adUnitId = adUnitId
+            }
+            adView.loadAd(AdRequest.Builder().build())
+            adView
+        },
+        update = { it.loadAd(AdRequest.Builder().build()) }
+    )
+}
