@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "1007821990391",
+    "firebase_url": "https://setas-20959-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "setas-20959",
+    "storage_bucket": "setas-20959.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1007821990391:android:0ec60a0b3729a4d5d0e6f2",
+        "android_client_info": {
+          "package_name": "com.example.mushtool_fct"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk_ikc0G-IoPs0AyzrFX-T7c75z8QNXRs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1007821990391:android:912506e599d77af8d0e6f2",
+        "android_client_info": {
+          "package_name": "com.team4.mushroom4"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk_ikc0G-IoPs0AyzrFX-T7c75z8QNXRs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
