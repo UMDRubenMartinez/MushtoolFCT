@@ -57,8 +57,8 @@ fun ComunityScreen(navController: NavController){
             verticalArrangement = Arrangement.Center
         ) {
             val items = listOf(
-                NavRoute(Icons.Default.Search, stringResource(id = R.string.messages),"search"),
-                NavRoute(Icons.Default.Folder, stringResource(id = R.string.mushPhotos),"myMushrooms"),
+                NavRoute(Icons.Default.Search, stringResource(id = R.string.messages),"messages"),
+                NavRoute(Icons.Default.Folder, stringResource(id = R.string.mushPhotos),"mushPhotos"),
                 )
 
             items.chunked(2).forEach { rowItems ->

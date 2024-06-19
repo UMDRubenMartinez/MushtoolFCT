@@ -55,9 +55,9 @@ fun RestaurantScreen(navController: NavController){
             verticalArrangement = Arrangement.Center
         ) {
             val items = listOf(
-                NavRoute(Icons.Default.Search, stringResource(id = R.string.eatMush),"search"),
-                NavRoute(Icons.Default.Folder, stringResource(id = R.string.eatNow),"myMushrooms"),
-                NavRoute(Icons.Default.Folder, stringResource(id = R.string.recipes),"myMushrooms"),
+                NavRoute(Icons.Default.Search, stringResource(id = R.string.eatMush),"eatMush"),
+                NavRoute(Icons.Default.Folder, stringResource(id = R.string.eatNow),"eatNow"),
+                NavRoute(Icons.Default.Folder, stringResource(id = R.string.recipes),"recipes"),
             )
             items.chunked(2).forEach { rowItems ->
                 Row(

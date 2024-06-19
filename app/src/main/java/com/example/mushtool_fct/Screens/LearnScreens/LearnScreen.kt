@@ -57,10 +57,10 @@ fun LearnScreen(navController: NavController){
             verticalArrangement = Arrangement.Center
         ) {
             val items = listOf(
-                NavRoute(Icons.Default.Search, stringResource(id = R.string.game),"search"),
-                NavRoute(Icons.Default.Folder, stringResource(id = R.string.mushScience),"myMushrooms"),
-                NavRoute(Icons.Default.Restaurant, stringResource(id = R.string.mushFile),"restaurant"),
-                NavRoute(Icons.Default.School, stringResource(id = R.string.mushGlossary),"learn"),
+                NavRoute(Icons.Default.Search, stringResource(id = R.string.game),"game"),
+                NavRoute(Icons.Default.Folder, stringResource(id = R.string.mushScience),"mushScience"),
+                NavRoute(Icons.Default.Restaurant, stringResource(id = R.string.mushFile),"files"),
+                NavRoute(Icons.Default.School, stringResource(id = R.string.mushGlossary),"glossary"),
             )
 
             items.chunked(2).forEach { rowItems ->

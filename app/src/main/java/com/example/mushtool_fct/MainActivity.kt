@@ -28,14 +28,23 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.mushtool_fct.Screens.ComunityScreens.ComunityScreen
+import com.example.mushtool_fct.Screens.ComunityScreens.MessagesMushtoolScreen
+import com.example.mushtool_fct.Screens.ComunityScreens.MushPhotosScreen
+import com.example.mushtool_fct.Screens.EatScreens.EatNowScreen
+import com.example.mushtool_fct.Screens.EatScreens.RecipesScreen
 import com.example.mushtool_fct.Screens.IdiomaManager
 import com.example.mushtool_fct.Screens.LearnScreens.LearnScreen
 import com.example.mushtool_fct.Screens.MainScreen
 import com.example.mushtool_fct.Screens.MushroomScreen
 import com.example.mushtool_fct.Screens.EatScreens.RestaurantScreen
+import com.example.mushtool_fct.Screens.LearnScreens.GameScreen
 import com.example.mushtool_fct.Screens.SearchScreens.SearchScreen
+import com.example.mushtool_fct.Screens.SearchScreens.foundedMushroomScreen
+import com.example.mushtool_fct.Screens.SearchScreens.whatIsScreen
 import com.example.mushtool_fct.Screens.SettingsScreen
 import com.example.mushtool_fct.Screens.WebScreen
+import com.example.mushtool_fct.Screens.LearnScreens.*
+import com.example.mushtool_fct.Screens.EatScreens.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -162,6 +171,17 @@ fun MyApp() {
             composable("learn") { LearnScreen(navController) }
             composable("comunity") { ComunityScreen(navController) }
             composable("mushtoolWeb") { WebScreen(navController) }
+            composable("foundedMushrooms"){ foundedMushroomScreen(navController)}
+            composable("whatIs"){ whatIsScreen(navController)}
+            composable("game"){GameScreen(navController)}
+            composable("glossary"){MushGlossaryScreen(navController)}
+            composable("mushScience"){MushscienceScreen(navController)}
+            composable("files"){FilesScreen(navController)}
+            composable("eatMush"){EatMushScreen(navController)}
+            composable("eatNow"){EatNowScreen(navController)}
+            composable("recipes"){RecipesScreen(navController)}
+            composable("messages"){ MessagesMushtoolScreen(navController)}
+            composable("mushPhotos"){ MushPhotosScreen(navController)}
         }
     }
 }
