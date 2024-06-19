@@ -27,6 +27,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.mushtool_fct.Screens.ComunityScreens.ComunityScreen
+import com.example.mushtool_fct.Screens.IdiomaManager
+import com.example.mushtool_fct.Screens.LearnScreens.LearnScreen
+import com.example.mushtool_fct.Screens.MainScreen
+import com.example.mushtool_fct.Screens.MushroomScreen
+import com.example.mushtool_fct.Screens.EatScreens.RestaurantScreen
+import com.example.mushtool_fct.Screens.SearchScreens.SearchScreen
+import com.example.mushtool_fct.Screens.SettingsScreen
+import com.example.mushtool_fct.Screens.WebScreen
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView

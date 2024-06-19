@@ -1,4 +1,4 @@
-package com.example.mushtool_fct
+package com.example.mushtool_fct.Screens
 
 import android.annotation.SuppressLint
 import android.content.Context
