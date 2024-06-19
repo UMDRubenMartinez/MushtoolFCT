@@ -1,4 +1,4 @@
-package com.example.mushtool_fct
+package com.example.mushtool_fct.Screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.example.mushtool_fct.R
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
