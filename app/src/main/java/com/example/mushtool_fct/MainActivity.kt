@@ -27,21 +27,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.mushtool_fct.mushroomScreens.whatMushroomIsScreen
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import com.google.firebase.FirebaseApp
-import com.google.firebase.firestore.firestore
-import com.google.firebase.ktx.Firebase
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MobileAds.initialize(this) {}
-        FirebaseApp.initializeApp(this)
         val idiomaGuardado = IdiomaManager.cargarIdiomaGuardado(this)
         IdiomaManager.actualizarIdioma(idiomaGuardado, this)
         setContent {
@@ -158,7 +153,6 @@ fun MyApp() {
             composable("learn") { LearnScreen(navController) }
             composable("comunity") { ComunityScreen(navController) }
             composable("mushtoolWeb") { WebScreen(navController) }
-            composable("whatMushroom"){ whatMushroomIsScreen(navController)}
         }
     }
 }

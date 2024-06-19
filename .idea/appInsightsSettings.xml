@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.mushtool_fct" />
-                  <option name="mobileSdkAppId" value="1:1007821990391:android:0ec60a0b3729a4d5d0e6f2" />
-                  <option name="projectId" value="setas-20959" />
-                  <option name="projectNumber" value="1007821990391" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
