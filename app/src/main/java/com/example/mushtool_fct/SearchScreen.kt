@@ -54,7 +54,7 @@ fun SearchScreen (navController: NavController){
         ) {
             val items = listOf(
                 NavRoute(Icons.Default.Search, stringResource(id = R.string.foundMushroom),"search"),
-                NavRoute(Icons.Default.Folder, stringResource(id = R.string.whatIs),"whatMushroom"),
+                NavRoute(Icons.Default.Folder, stringResource(id = R.string.whatIs),"myMushrooms"),
             )
             items.chunked(2).forEach { rowItems ->
                 Row(
