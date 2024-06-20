@@ -27,24 +27,22 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.mushtool_fct.Screens.ComunityScreens.ComunityScreen
-import com.example.mushtool_fct.Screens.ComunityScreens.MessagesMushtoolScreen
-import com.example.mushtool_fct.Screens.ComunityScreens.MushPhotosScreen
-import com.example.mushtool_fct.Screens.EatScreens.EatNowScreen
-import com.example.mushtool_fct.Screens.EatScreens.RecipesScreen
-import com.example.mushtool_fct.Screens.IdiomaManager
-import com.example.mushtool_fct.Screens.LearnScreens.LearnScreen
-import com.example.mushtool_fct.Screens.MainScreen
-import com.example.mushtool_fct.Screens.MushroomScreen
-import com.example.mushtool_fct.Screens.EatScreens.RestaurantScreen
-import com.example.mushtool_fct.Screens.LearnScreens.GameScreen
-import com.example.mushtool_fct.Screens.SearchScreens.SearchScreen
-import com.example.mushtool_fct.Screens.SearchScreens.foundedMushroomScreen
-import com.example.mushtool_fct.Screens.SearchScreens.whatIsScreen
-import com.example.mushtool_fct.Screens.SettingsScreen
-import com.example.mushtool_fct.Screens.WebScreen
-import com.example.mushtool_fct.Screens.LearnScreens.*
-import com.example.mushtool_fct.Screens.EatScreens.*
+import com.example.mushtool_fct.Screen.ComunityScreens.ComunityScreen
+import com.example.mushtool_fct.Screen.ComunityScreens.MessagesMushtoolScreen
+import com.example.mushtool_fct.Screen.ComunityScreens.MushPhotosScreen
+import com.example.mushtool_fct.Screen.EatScreens.EatNowScreen
+import com.example.mushtool_fct.Screen.EatScreens.RecipesScreen
+import com.example.mushtool_fct.Screen.IdiomaManager
+import com.example.mushtool_fct.Screen.MainScreen
+import com.example.mushtool_fct.Screen.MushroomScreen
+import com.example.mushtool_fct.Screen.EatScreens.RestaurantScreen
+import com.example.mushtool_fct.Screen.SearchScreens.SearchScreen
+import com.example.mushtool_fct.Screen.SearchScreens.foundedMushroomScreen
+import com.example.mushtool_fct.Screen.SearchScreens.whatIsScreen
+import com.example.mushtool_fct.Screen.SettingsScreen
+import com.example.mushtool_fct.Screen.WebScreen
+import com.example.mushtool_fct.Screen.Learn.*
+import com.example.mushtool_fct.Screen.EatScreens.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -174,7 +172,7 @@ fun MyApp() {
             composable("foundedMushrooms"){ foundedMushroomScreen(navController)}
             composable("whatIs"){ whatIsScreen(navController)}
             composable("game"){GameScreen(navController)}
-            composable("glossary"){MushGlossaryScreen(navController)}
+            composable("learn_glossary"){mushGlossary(navController)}
             composable("mushScience"){MushscienceScreen(navController)}
             composable("files"){FilesScreen(navController)}
             composable("eatMush"){EatMushScreen(navController)}

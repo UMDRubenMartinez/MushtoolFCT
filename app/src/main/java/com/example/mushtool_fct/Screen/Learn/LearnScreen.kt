@@ -1,4 +1,4 @@
-package com.example.mushtool_fct.Screens.SearchScreens
+package com.example.mushtool_fct.Screen.Learn
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -15,6 +15,8 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Text
@@ -28,16 +30,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.mushtool_fct.Data.NavRoute
 import com.example.mushtool_fct.R
-import com.example.mushtool_fct.Screens.Item
+import com.example.mushtool_fct.Screen.Item
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SearchScreen (navController: NavController){
+fun LearnScreen(navController: NavController){
     var context = LocalContext.current
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.search)) },
+                title = { Text(text=stringResource(id = R.string.learn)) },
                 backgroundColor = Color(0xFF8BC34A),
                 actions = {
                     IconButton(onClick = { navController.navigate("settings") }) {
@@ -55,9 +57,12 @@ fun SearchScreen (navController: NavController){
             verticalArrangement = Arrangement.Center
         ) {
             val items = listOf(
-                NavRoute(Icons.Default.Search, stringResource(id = R.string.foundMushroom),"foundedMushrooms"),
-                NavRoute(Icons.Default.Folder, stringResource(id = R.string.whatIs),"whatIs"),
+                NavRoute(Icons.Default.Search, stringResource(id = R.string.game),"game"),
+                NavRoute(Icons.Default.Folder, stringResource(id = R.string.mushScience),"mushScience"),
+                NavRoute(Icons.Default.Restaurant, stringResource(id = R.string.mushFile),"files"),
+                NavRoute(Icons.Default.School, stringResource(id = R.string.mushGlossary),"learn_glossary"),
             )
+
             items.chunked(2).forEach { rowItems ->
                 Row(
                     modifier = Modifier.padding(16.dp),
@@ -70,6 +75,6 @@ fun SearchScreen (navController: NavController){
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
+        }
     }
-}
 }

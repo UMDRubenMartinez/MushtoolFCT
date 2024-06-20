@@ -1,4 +1,4 @@
-package com.example.mushtool_fct.Screens.EatScreens
+package com.example.mushtool_fct.Screen.SearchScreens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -28,16 +28,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.mushtool_fct.Data.NavRoute
 import com.example.mushtool_fct.R
-import com.example.mushtool_fct.Screens.Item
+import com.example.mushtool_fct.Screen.Item
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun RestaurantScreen(navController: NavController){
+fun SearchScreen (navController: NavController){
     var context = LocalContext.current
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.eat)) },
+                title = { Text(text = stringResource(id = R.string.search)) },
                 backgroundColor = Color(0xFF8BC34A),
                 actions = {
                     IconButton(onClick = { navController.navigate("settings") }) {
@@ -55,9 +55,8 @@ fun RestaurantScreen(navController: NavController){
             verticalArrangement = Arrangement.Center
         ) {
             val items = listOf(
-                NavRoute(Icons.Default.Search, stringResource(id = R.string.eatMush),"eatMush"),
-                NavRoute(Icons.Default.Folder, stringResource(id = R.string.eatNow),"eatNow"),
-                NavRoute(Icons.Default.Folder, stringResource(id = R.string.recipes),"recipes"),
+                NavRoute(Icons.Default.Search, stringResource(id = R.string.foundMushroom),"foundedMushrooms"),
+                NavRoute(Icons.Default.Folder, stringResource(id = R.string.whatIs),"whatIs"),
             )
             items.chunked(2).forEach { rowItems ->
                 Row(
@@ -71,6 +70,6 @@ fun RestaurantScreen(navController: NavController){
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-        }
     }
+}
 }

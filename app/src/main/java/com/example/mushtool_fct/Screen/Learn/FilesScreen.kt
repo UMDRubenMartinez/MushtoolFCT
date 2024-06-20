@@ -1,4 +1,4 @@
-package com.example.mushtool_fct.Screens.EatScreens
+package com.example.mushtool_fct.Screen.Learn
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -23,7 +23,7 @@ import com.example.mushtool_fct.R
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun EatNowScreen(navController: NavController){
+fun FilesScreen(navController: NavController){
     var context = LocalContext.current
     Scaffold(
         topBar = {

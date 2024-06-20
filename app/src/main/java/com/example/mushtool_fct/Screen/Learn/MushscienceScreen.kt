@@ -1,4 +1,4 @@
-package com.example.mushtool_fct.Screens.LearnScreens
+package com.example.mushtool_fct.Screen.Learn
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background

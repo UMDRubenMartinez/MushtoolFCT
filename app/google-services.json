@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "743984683110",
+    "project_id": "mushtoolalfa",
+    "storage_bucket": "mushtoolalfa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:743984683110:android:7be3e0d4fbf32f2cea35a7",
+        "android_client_info": {
+          "package_name": "com.example.mushtool_fct"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByoz_BHqD1iGYvoWsmKWksLef_1cCt4hk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

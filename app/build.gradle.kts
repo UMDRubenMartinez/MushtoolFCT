@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    // Add the Google services Gradle plugin
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -93,4 +95,13 @@ dependencies {
     androidTestImplementation (libs.androidx.junit)
     androidTestImplementation (libs.androidx.espresso.core)
     androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.6.8")
+    //rememberAsyncImagePainter
+    implementation ("io.coil-kt:coil-compose:2.5.0")
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    // TODO: Add the dependencies for Firebase products you want to use
+    // When using the BoM, don't specify versions in Firebase dependencies
+    // https://firebase.google.com/docs/android/setup#available-libraries
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.auth.ktx)
 }
