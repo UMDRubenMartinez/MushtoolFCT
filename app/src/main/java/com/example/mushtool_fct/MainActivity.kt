@@ -18,6 +18,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +28,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.mushtool_fct.Screen.Auth.AuthScreen
+import com.example.mushtool_fct.Screen.Auth.SignupScreen
 import com.example.mushtool_fct.Screen.ComunityScreens.ComunityScreen
 import com.example.mushtool_fct.Screen.ComunityScreens.MessagesMushtoolScreen
 import com.example.mushtool_fct.Screen.ComunityScreens.MushPhotosScreen
@@ -47,6 +50,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.auth.FirebaseAuth
 
 
 class MainActivity : ComponentActivity() {
@@ -64,103 +68,118 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp() {
     val navController = rememberNavController()
+    val auth = FirebaseAuth.getInstance()
+
+    LaunchedEffect(auth) {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            navController.navigate("home") {
+                popUpTo("auth") { inclusive = true }
+            }
+        }
+    }
+
     Scaffold(
         bottomBar = {
-            NavigationBar(
-                containerColor = Color(0xFF8BC34A), // Color de fondo del NavigationBar
-                contentColor = Color.White // Color del contenido (texto e iconos)
-            ) {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
 
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                    selected = currentRoute == "home",
-                    onClick = { navController.navigate("home") },
-                    alwaysShowLabel = true, // Mostrar siempre el texto
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        selectedTextColor = Color.White,
-                        unselectedIconColor = Color.Black,
-                        unselectedTextColor = Color.Black
+            if (auth.currentUser != null && currentRoute != "auth" && currentRoute != "signup") {
+                NavigationBar(
+                    containerColor = Color(0xFF8BC34A), // Color de fondo del NavigationBar
+                    contentColor = Color.White // Color del contenido (texto e iconos)
+                ) {
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.Home, contentDescription = null) },
+                        selected = currentRoute == "home",
+                        onClick = { navController.navigate("home") },
+                        alwaysShowLabel = true, // Mostrar siempre el texto
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.White,
+                            selectedTextColor = Color.White,
+                            unselectedIconColor = Color.Black,
+                            unselectedTextColor = Color.Black
+                        )
                     )
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Search, contentDescription = null) },
-                    selected = currentRoute == "search",
-                    onClick = { navController.navigate("search") },
-                    alwaysShowLabel = true,
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        selectedTextColor = Color.White,
-                        unselectedIconColor = Color.Black,
-                        unselectedTextColor = Color.Black
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.Search, contentDescription = null) },
+                        selected = currentRoute == "search",
+                        onClick = { navController.navigate("search") },
+                        alwaysShowLabel = true,
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.White,
+                            selectedTextColor = Color.White,
+                            unselectedIconColor = Color.Black,
+                            unselectedTextColor = Color.Black
+                        )
                     )
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Folder, contentDescription = null) },
-                    selected = currentRoute == "myMushrooms",
-                    onClick = { navController.navigate("myMushrooms") },
-                    alwaysShowLabel = true,
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        selectedTextColor = Color.White,
-                        unselectedIconColor = Color.Black,
-                        unselectedTextColor = Color.Black
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.Folder, contentDescription = null) },
+                        selected = currentRoute == "myMushrooms",
+                        onClick = { navController.navigate("myMushrooms") },
+                        alwaysShowLabel = true,
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.White,
+                            selectedTextColor = Color.White,
+                            unselectedIconColor = Color.Black,
+                            unselectedTextColor = Color.Black
+                        )
                     )
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Restaurant, contentDescription = null) },
-                    selected = currentRoute == "restaurant",
-                    onClick = { navController.navigate("restaurant") },
-                    alwaysShowLabel = true,
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        selectedTextColor = Color.White,
-                        unselectedIconColor = Color.Black,
-                        unselectedTextColor = Color.Black
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.Restaurant, contentDescription = null) },
+                        selected = currentRoute == "restaurant",
+                        onClick = { navController.navigate("restaurant") },
+                        alwaysShowLabel = true,
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.White,
+                            selectedTextColor = Color.White,
+                            unselectedIconColor = Color.Black,
+                            unselectedTextColor = Color.Black
+                        )
                     )
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.School, contentDescription = null) },
-                    selected = currentRoute == "learn",
-                    onClick = { navController.navigate("learn") },
-                    alwaysShowLabel = true,
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        selectedTextColor = Color.White,
-                        unselectedIconColor = Color.Black,
-                        unselectedTextColor = Color.Black
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.School, contentDescription = null) },
+                        selected = currentRoute == "learn",
+                        onClick = { navController.navigate("learn") },
+                        alwaysShowLabel = true,
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.White,
+                            selectedTextColor = Color.White,
+                            unselectedIconColor = Color.Black,
+                            unselectedTextColor = Color.Black
+                        )
                     )
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Collections, contentDescription = null) },
-                    selected = currentRoute == "comunity",
-                    onClick = { navController.navigate("comunity") },
-                    alwaysShowLabel = true,
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        selectedTextColor = Color.White,
-                        unselectedIconColor = Color.Black,
-                        unselectedTextColor = Color.Black
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.Collections, contentDescription = null) },
+                        selected = currentRoute == "comunity",
+                        onClick = { navController.navigate("comunity") },
+                        alwaysShowLabel = true,
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.White,
+                            selectedTextColor = Color.White,
+                            unselectedIconColor = Color.Black,
+                            unselectedTextColor = Color.Black
+                        )
                     )
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Web, contentDescription = null) },
-                    selected = currentRoute == "mushtoolWeb",
-                    onClick = { navController.navigate("mushtoolWeb") },
-                    alwaysShowLabel = true,
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        selectedTextColor = Color.White,
-                        unselectedIconColor = Color.Black,
-                        unselectedTextColor = Color.Black
+                    NavigationBarItem(
+                        icon = { Icon(Icons.Default.Web, contentDescription = null) },
+                        selected = currentRoute == "mushtoolWeb",
+                        onClick = { navController.navigate("mushtoolWeb") },
+                        alwaysShowLabel = true,
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.White,
+                            selectedTextColor = Color.White,
+                            unselectedIconColor = Color.Black,
+                            unselectedTextColor = Color.Black
+                        )
                     )
-                )
+                }
             }
         }
     ) { innerPadding ->
-        NavHost(navController = navController, startDestination = "home", Modifier.padding(innerPadding)) {
+        NavHost(navController = navController, startDestination = "auth", Modifier.padding(innerPadding)) {
+            composable("auth"){ AuthScreen(navController)}
+            composable("signup") { SignupScreen(navController)}
             composable("home") { MainScreen(navController) }
             composable("settings") { SettingsScreen(navController) }
             composable("myMushrooms") { MushroomScreen(navController) }

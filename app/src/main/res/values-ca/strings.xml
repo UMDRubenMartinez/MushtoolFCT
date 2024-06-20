@@ -17,4 +17,12 @@
     <string name="game">Joc</string>
     <string name="mushFile">Fitxes dels bolets</string>
     <string name="messages">Missatges</string>
+    <string name="loginButton">Logueat</string>
+    <string name="registerButtonLogin">Registrarte</string>
+    <string name="register">Registre</string>
+    <string name="backToLogin">Tornar a Login</string>
+    <string name="email">Correu Electronic</string>
+    <string name="password">Contrasenya</string>
+    <string name="nullCamps">Omple tots els camps</string>
+    <string name="errorLogin">Login erroni</string>
 </resources>

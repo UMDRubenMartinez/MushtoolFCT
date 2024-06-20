@@ -22,6 +22,8 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.mushtool_fct.Screen.Auth.logOut
 import java.util.Locale
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -100,6 +103,14 @@ fun SettingsScreen(navController: NavHostController) {
 
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            Button(onClick = {
+                logOut(navController)
+            },colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF8BC34A)
+            )) {
+                Text("Log Out")
+            }
         }
     }
 }
