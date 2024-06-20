@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -33,6 +34,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.mushtool_fct.AdMobBanner
@@ -98,22 +101,29 @@ fun Item(icon: ImageVector, text: String, onClick: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
-            .size(100.dp)
             .padding(8.dp)
     ) {
         IconButton(
             modifier = Modifier
-                .size(60.dp)
+                .size(80.dp) // Aumentar el tamaño del botón
                 .clip(shape = CircleShape)
                 .background(Color(0xFF8BC34A)),
             onClick = onClick) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = Color.White
+                tint = Color.White,
+                modifier = Modifier.size(40.dp) // Aumentar el tamaño del ícono
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-        Text(text = text, fontWeight = FontWeight.Bold)
+        Text(
+            text = text,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            maxLines = 2, // Permitir hasta 2 líneas de texto
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.width(80.dp) // Ajustar el ancho para dar más espacio al texto
+        )
     }
 }
