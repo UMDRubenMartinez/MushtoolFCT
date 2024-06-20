@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Errores -->
+    <string name="nullCamps" tools:ignore="MissingTranslation">Rellena ambos campos</string>
+    <string name="errorLogin" tools:ignore="MissingTranslation">Login fallido</string>
+    <!---->
     <string name="app_name">Mushtool</string>
     <string name="home">Inicio</string>
     <string name="settings">Opciones</string>
@@ -20,4 +24,11 @@
     <string name="mushGlossary" tools:ignore="MissingTranslation" translatable="false">Mush Glossary</string>
     <string name="messages" tools:ignore="MissingTranslation">Mensajes</string>
     <string name="mushPhotos" tools:ignore="MissingTranslation">Mush Fotos</string>
+    <string name="login" translatable="false">Login</string>
+    <string name="loginButton" tools:ignore="MissingTranslation">Logueate</string>
+    <string name="registerButtonLogin" tools:ignore="MissingTranslation">Registrate</string>
+    <string name="register" tools:ignore="MissingTranslation">Registro</string>
+    <string name="backToLogin" tools:ignore="MissingTranslation">Volver a login</string>
+    <string name="email" tools:ignore="MissingTranslation">Correo Electronico</string>
+    <string name="password" tools:ignore="MissingTranslation">Contraseña</string>
 </resources>

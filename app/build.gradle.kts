@@ -55,6 +55,7 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation ("androidx.navigation:navigation-compose:2.7.7")
+    implementation ("com.google.firebase:firebase-auth-ktx:23.0.0")
     implementation ("androidx.compose.ui:ui:1.6.7")
     implementation ("com.google.android.material:material:1.1.0-alpha10")
     implementation ("androidx.appcompat:appcompat:1.1.0")

@@ -18,4 +18,12 @@
     <string name="mushFile">Files of Mushrooms</string>
     <string name="messages">Messages</string>
     <string name="mushPhotos">Mush Photos</string>
+    <string name="loginButton">Log-in</string>
+    <string name="registerButtonLogin">Sign Up</string>
+    <string name="register">Sign Up</string>
+    <string name="backToLogin">Back To Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="nullCamps">Fill in both fields</string>
+    <string name="errorLogin">Login fail</string>
 </resources>
