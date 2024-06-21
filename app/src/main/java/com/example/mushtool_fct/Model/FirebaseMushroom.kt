@@ -18,18 +18,21 @@ class FirebaseMushroom {
         return mushroomCollection.get().await()
     }
 
-    suspend fun getMushroomPairList(): List<Pair<String, Mushroom>>{
+    suspend fun getMushroomPairList(): List<Pair<Int, Mushroom>>{
         try {
             val snapshot: QuerySnapshot = getMushroomSnap()
-            val mushroomList = mutableListOf<Pair<String, Mushroom>>()
+            val mushroomList = mutableListOf<Pair<Int, Mushroom>>()
             for (document in snapshot.documents) {
                 val mushroom = document.toObject(Mushroom::class.java)
                 if (mushroom != null) {
-                    mushroomList.add(Pair(document.id, mushroom))
-                    Log.d("mushFirebase","${document.id}")
+                    var id: Int? = document.id.toIntOrNull()
+                    if(id != null) {
+                        mushroomList.add(Pair(id, mushroom))
+                    }
+                    Log.d("mushFirebase","${id}")
                 }
             }
-            return mushroomList?: mutableListOf<Pair<String, Mushroom>>(Pair("",Mushroom()))
+            return mushroomList?: mutableListOf<Pair<Int, Mushroom>>(Pair(0,Mushroom()))
         } catch (e: Exception) {
             Log.w(ContentValues.TAG, "Error obteniendo documentos.", e)
             return mutableListOf()
