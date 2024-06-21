@@ -40,7 +40,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.mushtool_fct.Entity.Criba
 import com.example.mushtool_fct.Entity.Mushroom
+import com.example.mushtool_fct.Model.FirebaseCriba
 import com.example.mushtool_fct.Model.FirebaseMushroom
 import com.example.mushtool_fct.R
 
@@ -48,13 +50,19 @@ import com.example.mushtool_fct.R
 @Composable
 fun mushGlossary(navController: NavController){
     //var context = LocalContext.current
-    val mushroomsList = remember { mutableStateOf<List<Pair<String, Mushroom>>>(emptyList()) }
+    val mushroomsList = remember { mutableStateOf<List<Pair<Int, Mushroom>>>(emptyList()) }
+    val mushroomsCribaList = remember { mutableStateOf<List<Pair<Int, Criba>>>(emptyList()) }
     println("Lista de datos:" + mushroomsList.value)
 
     LaunchedEffect("getMushroomList") {
-        val conectionFirebase = FirebaseMushroom()
-        val fetchedList = conectionFirebase.getMushroomPairList()
-        mushroomsList.value = fetchedList
+        val conectionFirebaseMush = FirebaseMushroom()
+        val fetchedMushList = conectionFirebaseMush.getMushroomPairList()
+        mushroomsList.value = fetchedMushList
+
+        val conectionFirebaseCriba = FirebaseCriba()
+        conectionFirebaseCriba.setIdioma("en")
+        val fetchedCribaList = conectionFirebaseCriba.getCribaMushroomPairList(mushroomsList.value)
+        mushroomsCribaList.value = fetchedCribaList
     }
 
     Scaffold(
@@ -78,7 +86,7 @@ fun mushGlossary(navController: NavController){
             verticalArrangement = Arrangement.Center
         ) {
             MushroomList(
-                mushroomsList.value,
+                mushroomsCribaList.value,
                 onClick = { mushroom -> }
             )
         }
@@ -86,7 +94,7 @@ fun mushGlossary(navController: NavController){
 }
 
 @Composable
-fun MushroomList(mushrooms: List<Pair<String, Mushroom>>, onClick: (Mushroom) -> Unit) {
+fun MushroomList(mushrooms: List<Pair<Int, Criba>>, onClick: (Criba) -> Unit) {
     LazyColumn(modifier = Modifier) {
         items(mushrooms) { mushroomPair ->
             val mushroom = mushroomPair.second
@@ -98,7 +106,7 @@ fun MushroomList(mushrooms: List<Pair<String, Mushroom>>, onClick: (Mushroom) ->
 }
 
 @Composable
-fun MushroomItem(mushroom: Mushroom, onClick: () -> Unit) {
+fun MushroomItem(mushroom: Criba, onClick: () -> Unit) {
     Card(
         backgroundColor = Color.White,
         modifier = Modifier
@@ -138,6 +146,12 @@ fun MushroomItem(mushroom: Mushroom, onClick: () -> Unit) {
                     )
                     Text(
                         text = mushroom.consum,
+                        style = MaterialTheme.typography.body2,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = mushroom.nomConegut,
                         style = MaterialTheme.typography.body2,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
