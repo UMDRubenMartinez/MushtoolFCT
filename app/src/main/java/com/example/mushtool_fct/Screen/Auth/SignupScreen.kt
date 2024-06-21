@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.mushtool_fct.R
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,7 +87,7 @@ fun SignupScreen(navController: NavController) {
                         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
-                                    Toast.makeText(
+                                    /*Toast.makeText(
                                         context,
                                         "Registration Successful",
                                         Toast.LENGTH_SHORT
@@ -95,7 +96,33 @@ fun SignupScreen(navController: NavController) {
                                         popUpTo("auth") { inclusive = true }
                                     }
                                     errorMessage = null
-                                } else {
+                                    */
+                                    val uid = FirebaseAuth.getInstance().currentUser?.uid
+                                    // Agregar usuario a la colección users en Firestore
+                                    uid?.let { uid ->
+                                        val db = FirebaseFirestore.getInstance()
+                                        val userName = email.substringBefore('@')
+                                        val user = hashMapOf(
+                                            "Email" to email,
+                                            "Nombre" to userName
+                                        )
+                                        db.collection("users").document(uid)
+                                            .set(user)
+                                            .addOnSuccessListener {
+                                                Toast.makeText(
+                                                    context,
+                                                    "Registration Successful",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                                navController.navigate("home") {
+                                                    popUpTo("auth") { inclusive = true }
+                                                }
+                                                errorMessage = null
+                                            }
+                                            .addOnFailureListener { e ->
+                                                errorMessage = "Error adding user to Firestore: ${e.message}"
+                                            }
+                                }} else {
                                     errorMessage = "errorLogin"
                                 }
                             }
