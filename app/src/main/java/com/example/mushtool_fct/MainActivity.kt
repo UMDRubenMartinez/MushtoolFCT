@@ -1,5 +1,6 @@
 package com.example.mushtool_fct
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,28 +25,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.mushtool_fct.Model.MessagesViewModel
 import com.example.mushtool_fct.Screen.Auth.AuthScreen
 import com.example.mushtool_fct.Screen.Auth.SignupScreen
 import com.example.mushtool_fct.Screen.ComunityScreens.ComunityScreen
 import com.example.mushtool_fct.Screen.ComunityScreens.MessagesMushtoolScreen
 import com.example.mushtool_fct.Screen.ComunityScreens.MushPhotosScreen
+import com.example.mushtool_fct.Screen.ComunityScreens.Replies
+import com.example.mushtool_fct.Screen.EatScreens.EatMushScreen
 import com.example.mushtool_fct.Screen.EatScreens.EatNowScreen
 import com.example.mushtool_fct.Screen.EatScreens.RecipesScreen
+import com.example.mushtool_fct.Screen.EatScreens.RestaurantScreen
 import com.example.mushtool_fct.Screen.IdiomaManager
+import com.example.mushtool_fct.Screen.Learn.FilesScreen
+import com.example.mushtool_fct.Screen.Learn.GameScreen
+import com.example.mushtool_fct.Screen.Learn.LearnScreen
+import com.example.mushtool_fct.Screen.Learn.MushscienceScreen
+import com.example.mushtool_fct.Screen.Learn.mushGlossary
 import com.example.mushtool_fct.Screen.MainScreen
 import com.example.mushtool_fct.Screen.MushroomScreen
-import com.example.mushtool_fct.Screen.EatScreens.RestaurantScreen
 import com.example.mushtool_fct.Screen.SearchScreens.SearchScreen
 import com.example.mushtool_fct.Screen.SearchScreens.foundedMushroomScreen
 import com.example.mushtool_fct.Screen.SearchScreens.whatIsScreen
 import com.example.mushtool_fct.Screen.SettingsScreen
 import com.example.mushtool_fct.Screen.WebScreen
-import com.example.mushtool_fct.Screen.Learn.*
-import com.example.mushtool_fct.Screen.EatScreens.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -58,6 +66,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         MobileAds.initialize(this) {}
         val idiomaGuardado = IdiomaManager.cargarIdiomaGuardado(this)
+
         IdiomaManager.actualizarIdioma(idiomaGuardado, this)
         setContent {
             MyApp()
@@ -65,10 +74,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MyApp() {
     val navController = rememberNavController()
     val auth = FirebaseAuth.getInstance()
+    val messagesViewModel: MessagesViewModel = viewModel()
 
     LaunchedEffect(auth) {
         val currentUser = auth.currentUser
@@ -84,7 +95,7 @@ fun MyApp() {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
 
-            if (auth.currentUser != null && currentRoute != "auth" && currentRoute != "signup" && currentRoute != "messages") {
+            if (auth.currentUser != null && currentRoute != "auth" && currentRoute != "signup" && currentRoute != "messages" && currentRoute != "questionDetail/{questionId}") {
                 NavigationBar(
                     containerColor = Color(0xFF8BC34A), // Color de fondo del NavigationBar
                     contentColor = Color.White // Color del contenido (texto e iconos)
@@ -197,8 +208,15 @@ fun MyApp() {
             composable("eatMush"){EatMushScreen(navController)}
             composable("eatNow"){EatNowScreen(navController)}
             composable("recipes"){RecipesScreen(navController)}
-            composable("messages"){ MessagesMushtoolScreen(navController)}
+            composable("messages"){ MessagesMushtoolScreen(navController,messagesViewModel)}
             composable("mushPhotos"){ MushPhotosScreen(navController)}
+            composable("questionDetail/{questionId}") { backStackEntry ->
+                val questionId = backStackEntry.arguments?.getString("questionId")
+                val question = messagesViewModel.messages.value.find { it.id == questionId }
+                question?.let {
+                    Replies(navController, messagesViewModel,it)
+                }
+            }
         }
     }
 }
