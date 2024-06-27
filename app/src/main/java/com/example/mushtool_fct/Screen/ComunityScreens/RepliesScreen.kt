@@ -65,7 +65,7 @@ fun RepliesScreen(navController: NavController, preguntaId: String) {
     // Function to fetch replies
     suspend fun fetchReplies() {
         try {
-            val querySnapshot = firestore.collection("forum").document(preguntaId).collection("respuestas").get().await()
+            val querySnapshot = firestore.collection("forum").document(preguntaId).collection("respuestas").orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING).get().await()
             val respuestas = querySnapshot.documents.mapNotNull { doc ->
                 val respuesta = doc.toObject(forumMessage::class.java)
                 respuesta?.let { Pair(doc.id, it) }
@@ -194,13 +194,17 @@ fun RepliesScreen(navController: NavController, preguntaId: String) {
                     .background(Color(0xFFF5F5DC))
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.Top,
-                contentPadding = PaddingValues(vertical = 16.dp)
+                contentPadding = PaddingValues(
+                    top = 16.dp,
+                    bottom = 72.dp // Ajusta este valor según la altura de tu BottomBar
+                )
             ) {
                 items(listaRespuestas.value) { (_, respuesta) ->
                     MessageCard(null, respuesta, navController)
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
+
         }
     }
 }

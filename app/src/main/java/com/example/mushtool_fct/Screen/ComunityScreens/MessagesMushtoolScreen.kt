@@ -7,13 +7,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -36,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.mushtool_fct.Data.Users
@@ -67,7 +72,7 @@ fun MessagesMushtoolScreen(navController: NavController){
 
    suspend fun fetchMessages() {
         try {
-            val querySnapshot = collectionRef.get().await()
+            val querySnapshot = collectionRef.orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING).get().await()
             val mensajes = querySnapshot.documents.mapNotNull { doc ->
                 val mensaje = doc.toObject(forumMessage::class.java)
                 if (mensaje != null) {
@@ -121,6 +126,7 @@ fun MessagesMushtoolScreen(navController: NavController){
                 OutlinedTextField(
                     value = nuevoMensaje.value,
                     onValueChange = { nuevoMensaje.value = it },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
                     trailingIcon = {
                         ElevatedButton(
                             onClick = {
@@ -158,19 +164,28 @@ fun MessagesMushtoolScreen(navController: NavController){
             }
         }
     ) {
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF5F5DC)),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .background(Color(0xFFF5F5DC))
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.Top,
+            contentPadding = PaddingValues(bottom = 72.dp) // Ajusta este valor según la altura de tu BottomBar
         ) {
-            if (listaMensajes.value.isEmpty()) {
-                Text("Cargando mensajes...", style = MaterialTheme.typography.bodyMedium)
-            } else {
-                listaMensajes.value.forEach { (id, mensaje) ->
-                    MessageCard(id, mensaje, navController)
+            item {
+                if (listaMensajes.value.isEmpty()) {
+                    Text("Cargando mensajes...", style = MaterialTheme.typography.bodyMedium)
                 }
+            }
+
+            items(listaMensajes.value) { (id, mensaje) ->
+                MessageCard(id, mensaje, navController)
+                Spacer(modifier = Modifier.height(16.dp)) // Añade espacio entre los mensajes
+            }
+
+            // Añade un item Spacer al final para dejar espacio para la BottomBar
+            item {
+                Spacer(modifier = Modifier.height(72.dp)) // Ajusta este valor según la altura de tu BottomBar
             }
         }
     }
