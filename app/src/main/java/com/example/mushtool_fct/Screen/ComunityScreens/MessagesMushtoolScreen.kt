@@ -3,6 +3,7 @@ package com.example.mushtool_fct.Screen.ComunityScreens
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,64 +46,65 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.auth.User
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.tasks.await
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "MutableCollectionMutableState")
 @Composable
 fun MessagesMushtoolScreen(navController: NavController){
-    var context = LocalContext.current
-    var listaMensajes = remember { mutableStateOf(emptyList<forumMessage>()) }
-    var nuevoMensaje = remember { mutableStateOf("") } // Nuevo estado para el mensaje que se va a enviar
-    var idUser:String
-    val updatedMessages = remember { mutableStateOf(mutableListOf<forumMessage>()) }
+    val context = LocalContext.current
+    val listaMensajes = remember { mutableStateOf(emptyList<Pair<String, forumMessage>>()) }
+    val nuevoMensaje = remember { mutableStateOf("") }
+    val updatedMessages = remember { mutableStateOf(mutableListOf<Pair<String, forumMessage>>()) }
+    val firestore = FirebaseFirestore.getInstance()
+    val collectionRef = firestore.collection("forum")
+    val userRef = firestore.collection("users")
+    val reloadMessages = remember { mutableStateOf(false) }
 
 
-
-    LaunchedEffect(true) {
-        val firestore = FirebaseFirestore.getInstance()
-        val collectionRef = firestore.collection("forum")
-        val userRef = firestore.collection("users")
-        /*
-        collectionRef.get()
-            .addOnSuccessListener { querySnapshot ->
-                val mensajes = querySnapshot.documents.mapNotNull { it.toObject(forumMessage::class.java) }
-                listaMensajes.value = mensajes
-                Log.d("Firestore", "Objetos obtenidos: ${listaMensajes.value}")
-                Log.w("UserId", idUser)
-            }
-            .addOnFailureListener { exception ->
-                Log.w("Firestore", "Error al obtener documentos: ", exception)
-            }*/
-        collectionRef.get()
-            .addOnSuccessListener { querySnapshot ->
-                val mensajes = querySnapshot.documents.mapNotNull { it.toObject(forumMessage::class.java) }
-
-                mensajes.forEach { mensaje ->
-                    val userId = mensaje.createdBy
-                    userRef.document(userId).get()
-                        .addOnSuccessListener { userSnapshot ->
-                            val user = userSnapshot.toObject(Users::class.java)
-                            val username = user?.Nombre ?: "Unknown User"
-                            Log.w("Username",username.toString())
-                            updatedMessages.value.add(forumMessage(username, mensaje.createdAt, mensaje.text))
-                            if (updatedMessages.value.size == mensajes.size) {
-                                listaMensajes.value = updatedMessages.value
-                            }
-                        }
-                        .addOnFailureListener { exception ->
-                            Log.w("Firestore", "Error al obtener usuario: ", exception)
-                        }
+   suspend fun fetchMessages() {
+        try {
+            val querySnapshot = collectionRef.get().await()
+            val mensajes = querySnapshot.documents.mapNotNull { doc ->
+                val mensaje = doc.toObject(forumMessage::class.java)
+                if (mensaje != null) {
+                    Pair(doc.id, mensaje)
+                } else {
+                    null
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.w("Firestore", "Error al obtener documentos: ", exception)
+
+            val mensajesWithUsernames = coroutineScope {
+                mensajes.map { (id, mensaje) ->
+                    async {
+                        val userId = mensaje.createdBy
+                        val userSnapshot = userRef.document(userId).get().await()
+                        val user = userSnapshot.toObject(Users::class.java)
+                        val username = user?.Nombre ?: "Unknown User"
+                        Pair(id, forumMessage(username, mensaje.createdAt, mensaje.text))
+                    }
+                }.awaitAll()
             }
+            listaMensajes.value = mensajesWithUsernames
+        } catch (e: Exception) {
+            Log.w("Firestore", "Error al obtener documentos: ")
+    }
+   }
+
+
+
+
+    LaunchedEffect(reloadMessages.value) {
+        fetchMessages()
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { BackButton(navController);Text(text = stringResource(id = R.string.MushtoolWeb)) },
+                title = { BackButton(navController); Text(text = stringResource(id = R.string.MushtoolWeb)) },
                 backgroundColor = Color(0xFF8BC34A),
                 actions = {
                     IconButton(onClick = { navController.navigate("settings") }) {
@@ -110,38 +112,42 @@ fun MessagesMushtoolScreen(navController: NavController){
                     }
                 }
             )
-        }, bottomBar = {
-            Row(verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()){
+        },
+        bottomBar = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 OutlinedTextField(
                     value = nuevoMensaje.value,
                     onValueChange = { nuevoMensaje.value = it },
-                    trailingIcon = {ElevatedButton(
-                        onClick = {
-                            if (nuevoMensaje.value.isNotBlank()) {
-                                val firestore = FirebaseFirestore.getInstance()
-                                val collectionRef = firestore.collection("forum")
-                                val auth = FirebaseAuth.getInstance()
-                                val currentUser = auth.currentUser
-                                val mensaje = forumMessage(
-                                    currentUser?.uid ?: "",
-                                    Timestamp.now(),
-                                    nuevoMensaje.value
-                                )
-                                collectionRef.add(mensaje)
-                                    .addOnSuccessListener {
-                                        Log.d("Firestore", "Mensaje enviado correctamente")
-                                        nuevoMensaje.value = ""
-                                    }
-                                    .addOnFailureListener { e ->
-                                        Log.w("Firestore", "Error al enviar mensaje", e)
-                                    }
-                            }
-                        },
-                        modifier = Modifier.padding(8.dp)
-                    ) {
-                        Icon(Icons.Default.Send, contentDescription = "Enviar")
-                    }},
+                    trailingIcon = {
+                        ElevatedButton(
+                            onClick = {
+                                if (nuevoMensaje.value.isNotBlank()) {
+                                    val auth = FirebaseAuth.getInstance()
+                                    val currentUser = auth.currentUser
+                                    val mensaje = forumMessage(
+                                        currentUser?.uid ?: "",
+                                        Timestamp.now(),
+                                        nuevoMensaje.value
+                                    )
+                                    collectionRef.add(mensaje)
+                                        .addOnSuccessListener {
+                                            Log.d("Firestore", "Mensaje enviado correctamente")
+                                            nuevoMensaje.value = ""
+                                            reloadMessages.value = !reloadMessages.value // Toggle the reload state
+                                        }
+                                        .addOnFailureListener { e ->
+                                            Log.w("Firestore", "Error al enviar mensaje", e)
+                                        }
+                                }
+                            },
+                            modifier = Modifier.padding(8.dp)
+                        ) {
+                            Icon(Icons.Default.Send, contentDescription = "Enviar")
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
@@ -157,27 +163,29 @@ fun MessagesMushtoolScreen(navController: NavController){
                 .fillMaxSize()
                 .background(Color(0xFFF5F5DC)),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center // Ajuste para separar los mensajes de la barra de entrada
-
+            verticalArrangement = Arrangement.Center
         ) {
             if (listaMensajes.value.isEmpty()) {
                 Text("Cargando mensajes...", style = MaterialTheme.typography.bodyMedium)
             } else {
-                listaMensajes.value.forEach { mensaje ->
-                    MessageCard(mensaje)
+                listaMensajes.value.forEach { (id, mensaje) ->
+                    MessageCard(id, mensaje, navController)
                 }
             }
-
         }
     }
 }
 
+
 @Composable
-fun MessageCard(mensaje: forumMessage) {
+fun MessageCard(id: String? = null, mensaje: forumMessage, navController: NavController) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = 4.dp)
+            .clickable(enabled = id != null) {
+                id?.let { navController.navigate("respuestas/$it") }
+            },
         shape = RoundedCornerShape(8.dp),
         shadowElevation = 4.dp,
         color = MaterialTheme.colorScheme.surfaceVariant

@@ -24,15 +24,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.mushtool_fct.Screen.Auth.AuthScreen
 import com.example.mushtool_fct.Screen.Auth.SignupScreen
 import com.example.mushtool_fct.Screen.ComunityScreens.ComunityScreen
 import com.example.mushtool_fct.Screen.ComunityScreens.MessagesMushtoolScreen
 import com.example.mushtool_fct.Screen.ComunityScreens.MushPhotosScreen
+import com.example.mushtool_fct.Screen.ComunityScreens.RepliesScreen
 import com.example.mushtool_fct.Screen.EatScreens.EatNowScreen
 import com.example.mushtool_fct.Screen.EatScreens.RecipesScreen
 import com.example.mushtool_fct.Screen.IdiomaManager
@@ -84,7 +87,7 @@ fun MyApp() {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
 
-            if (auth.currentUser != null && currentRoute != "auth" && currentRoute != "signup" && currentRoute != "messages") {
+            if (auth.currentUser != null && currentRoute != "auth" && currentRoute != "signup" && currentRoute != "messages" && currentRoute != "respuestas/{preguntaId}") {
                 NavigationBar(
                     containerColor = Color(0xFF8BC34A), // Color de fondo del NavigationBar
                     contentColor = Color.White // Color del contenido (texto e iconos)
@@ -199,6 +202,15 @@ fun MyApp() {
             composable("recipes"){RecipesScreen(navController)}
             composable("messages"){ MessagesMushtoolScreen(navController)}
             composable("mushPhotos"){ MushPhotosScreen(navController)}
+            composable(
+                "respuestas/{preguntaId}",
+                arguments = listOf(navArgument("preguntaId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                RepliesScreen(
+                    navController,
+                    backStackEntry.arguments?.getString("preguntaId") ?: ""
+                )
+            }
         }
     }
 }
