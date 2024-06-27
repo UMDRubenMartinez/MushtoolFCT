@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,19 +15,25 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -181,26 +188,7 @@ fun MushroomItem(mushroom: Criba, onClick: () -> Unit) {
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
                 )
-                Log.d("mush","${mushroom.nomCientific}")
                 Row(){
-                    Text(
-                        text = mushroom.temporada,
-                        style = MaterialTheme.typography.body2,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Text(
-                        text = mushroom.toxicitat,
-                        style = MaterialTheme.typography.body2,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Text(
-                        text = mushroom.consum,
-                        style = MaterialTheme.typography.body2,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
                     Text(
                         text = mushroom.nomConegut,
                         style = MaterialTheme.typography.body2,
@@ -215,8 +203,8 @@ fun MushroomItem(mushroom: Criba, onClick: () -> Unit) {
 
 @Composable
 fun MushroomDetails(mushroomPair: Pair<Int, Criba>) {
-    var idDocument = mushroomPair.first
-    var mushroom = mushroomPair.second
+    val idDocument = mushroomPair.first
+    val mushroom = mushroomPair.second
     val caracteristica = remember { mutableStateOf<Caracteristica>(Caracteristica()) }
 
     LaunchedEffect(idDocument) {
@@ -250,40 +238,155 @@ fun MushroomDetails(mushroomPair: Pair<Int, Criba>) {
             fontWeight = FontWeight.Bold,
             color = Color(0xFF4E342E) // Un color oscuro que contraste bien con el fondo
         )
+        if(mushroom.altresNoms != "") {
+            ItemNormalDetails("", mushroom.altresNoms)
+        }
+        Row(){
+            val listRow: List<Pair<String, String>> = listOf(
+                "" to mushroom.nomCientific,
+                "" to mushroom.habitats,
+            )
+            RowListNormalDetails(listRow)
+        }
+        Row(){
+            ItemNormalDetails("", mushroom.diametre)
+            Spacer(modifier = Modifier.width(16.dp))
+            ItemNormalDetails("", mushroom.gruixDePeu)
+            Spacer(modifier = Modifier.width(16.dp))
+            ItemNormalDetails("", mushroom.llargadaDelPeu)
+        }
+        Row(){
+            ItemNormalDetails("", mushroom.temporada)
+            Spacer(modifier = Modifier.width(16.dp))
+            ItemNormalDetails("", mushroom.consum)
+            Spacer(modifier = Modifier.width(16.dp))
+            ItemNormalDetails("", mushroom.toxicitat)
+        }
+        //Seccion de con desplegables de descripciones según idioma
+        ItemCycler(caracteristica.value)
+    }
+}
+
+fun createList(caracteristica: Caracteristica): List<Pair<String, String>> {
+    val items = listOfNotNull(
+        caracteristica.descripcio?.let { "Descripción" to it },
+        caracteristica.comentariXef?.let { "Comentario Xef" to it },
+        caracteristica.comentari?.let { "Comentario Experto" to it }
+    )
+    return items
+}
+
+@Composable
+fun ItemCycler(caracteristica: Caracteristica) {
+    val listOfItems: List<Pair<String, String>> = createList(caracteristica)
+    var currentIndex by remember { mutableStateOf(0) }
+    TextButton(
+        onClick = {
+            currentIndex = (currentIndex + 1) % listOfItems.size
+            if (listOfItems[currentIndex].second == "") {
+                currentIndex = (currentIndex + 1) % listOfItems.size
+            }
+        },
+        colors = ButtonDefaults.textButtonColors(),
+        modifier = Modifier.padding(top = 8.dp)
+    ) {
         Text(
-            text = "Scientific name: ${mushroom.nomCientific}",
-            fontSize = 18.sp,
-            color = Color.DarkGray,
-            modifier = Modifier.padding(top = 8.dp)
-        )
-        Text(
-            text = "Description",
+            text = "< " + listOfItems[currentIndex].first + " >",
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(vertical = 8.dp),
+            modifier = Modifier.padding(vertical = 4.dp),
             color = Color(0xFF6D4C41) // Un marrón suave para los títulos de sección
         )
-        Text(
-            text = caracteristica.value.descripcio,
-            fontSize = 16.sp,
-            color = Color.DarkGray,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = caracteristica.value.comentariXef,
-            fontSize = 16.sp,
-            color = Color.DarkGray,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = caracteristica.value.comentari,
-            fontSize = 16.sp,
-            color = Color.DarkGray,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        // Repite el patrón para otros detalles como el diámetro del sombrero, la temporada, y el tipo
-        //DetailSection(title = "Hat Diameter", detail = mushroom.hatDiameter)
-        //DetailSection(title = "Season", detail = mushroom.season)
-        //DetailSection(title = "Type", detail = mushroom.type)
     }
+    Text(
+        text = listOfItems[currentIndex].second,
+        fontSize = 18.sp,
+        color = Color.DarkGray,
+        modifier = Modifier
+            .padding(vertical = 4.dp)
+            .padding(8.dp)
+    )
+}
+
+/*@Composable
+fun DropDownDetails(titulo:String, info: String) {
+    if(info != "") {
+        var expanded by remember { mutableStateOf(false) }
+        Box(
+            modifier = Modifier
+                .clickable { expanded = true }
+        ) {
+            Text(
+                text = titulo,
+                fontSize = 18.sp,
+                color = Color.DarkGray,
+                //.padding(16.dp)
+                //.background(MaterialTheme.colors.surface)
+            )
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                DropdownMenuItem(onClick = { expanded = false }) {
+                    Text(text = info)
+                }
+            }
+        }
+    }
+}*/
+
+@Composable
+fun ExpandedNormalDetails(titulo:String, info: String) {
+    if(info != "") {
+        var expanded by remember { mutableStateOf(false) }
+        Box(
+            modifier = Modifier
+                .clickable { expanded = true }
+        ) {
+            if (!expanded) {
+                Text(
+                    text = titulo,
+                    fontSize = 18.sp,
+                    color = Color.DarkGray,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { expanded = !expanded }
+                        .padding(8.dp)
+                )
+            }
+            if (expanded) {
+                Text(
+                    text = info,
+                    fontSize = 18.sp,
+                    color = Color.DarkGray,
+                    modifier = Modifier
+                        .padding(vertical = 4.dp)
+                        .clickable { expanded = !expanded }
+                        .padding(8.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun RowListNormalDetails(listOfItems: List<Pair<String, String>>) {
+    listOfItems.forEachIndexed { index, item ->
+        if(item.second != ""){
+            ItemNormalDetails(item.first, item.second)
+            if (index != listOfItems.size - 1) {
+                Spacer(modifier = Modifier.width(16.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun ItemNormalDetails(titulo:String, info: String) {
+    Text(
+        text = "${titulo}${info}",
+        fontSize = 18.sp,
+        color = Color.DarkGray,
+        modifier = Modifier.padding(top = 8.dp)
+    )
 }

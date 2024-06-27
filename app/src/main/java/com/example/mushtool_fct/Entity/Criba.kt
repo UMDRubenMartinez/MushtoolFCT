@@ -2,7 +2,7 @@ package com.example.mushtool_fct.Entity
 
 class Criba: Mushroom() {
     var altresNoms: String = ""
-    var habitat: String = ""
+    var habitats: String = ""
     var nomConegut: String = ""
 
     fun cookMushroom() {
