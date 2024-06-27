@@ -37,83 +37,77 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.mushtool_fct.Data.Users
 import com.example.mushtool_fct.Data.forumMessage
-import com.example.mushtool_fct.Functions.*
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.tasks.await
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "MutableCollectionMutableState")
 @Composable
 fun RepliesScreen(navController: NavController, preguntaId: String) {
     val pregunta = remember { mutableStateOf<forumMessage?>(null) }
     val listaRespuestas = remember { mutableStateOf(emptyList<Pair<String, forumMessage>>()) }
-    val updatedRespuestas = remember { mutableStateOf(mutableListOf<Pair<String, forumMessage>>()) }
     var nuevaRespuesta by remember { mutableStateOf("") }
     val firestore = FirebaseFirestore.getInstance()
     val userRef = firestore.collection("users")
     val keyboardController = LocalSoftwareKeyboardController.current
-    val loadData = remember { mutableStateOf(true) }
+    val reloadRespuestas = remember { mutableStateOf(false) }
 
+    // Function to fetch replies
+    suspend fun fetchReplies() {
+        try {
+            val querySnapshot = firestore.collection("forum").document(preguntaId).collection("respuestas").get().await()
+            val respuestas = querySnapshot.documents.mapNotNull { doc ->
+                val respuesta = doc.toObject(forumMessage::class.java)
+                respuesta?.let { Pair(doc.id, it) }
+            }
 
-    LaunchedEffect(loadData.value) {
-        if (loadData.value) {
-            firestore.collection("forum").document(preguntaId).collection("respuestas").get()
-                .addOnSuccessListener { querySnapshot ->
-                    val respuestas = querySnapshot.documents.mapNotNull { doc ->
-                        val respuesta = doc.toObject(forumMessage::class.java)
-                        respuesta?.let { Pair(doc.id, it) }
-                    }
-
-                    respuestas.forEach { (id, respuesta) ->
+            val respuestasWithUsernames = coroutineScope {
+                respuestas.map { (id, respuesta) ->
+                    async {
                         val userId = respuesta.createdBy
-                        userRef.document(userId).get()
-                            .addOnSuccessListener { userSnapshot ->
-                                val user = userSnapshot.toObject(Users::class.java)
-                                val username = user?.Nombre ?: "Unknown User"
-                                updatedRespuestas.value = updatedRespuestas.value.toMutableList().apply {
-                                    add(Pair(id, forumMessage(username, respuesta.createdAt, respuesta.text)))
-                                }
-                                if (updatedRespuestas.value.size == respuestas.size) {
-                                    listaRespuestas.value = updatedRespuestas.value
-                                }
-                            }
-                            .addOnFailureListener { exception ->
-                                Log.w("Firestore", "Error al obtener usuario: ", exception)
-                            }
+                        val userSnapshot = userRef.document(userId).get().await()
+                        val user = userSnapshot.toObject(Users::class.java)
+                        val username = user?.Nombre ?: "Unknown User"
+                        Pair(id, forumMessage(username, respuesta.createdAt, respuesta.text))
                     }
-                }
-                .addOnFailureListener { exception ->
-                    Log.w("Firestore", "Error al obtener respuestas: ", exception)
-                }
-            firestore.collection("forum").document(preguntaId).get()
-                .addOnSuccessListener { documentSnapshot ->
-                    val mensaje = documentSnapshot.toObject(forumMessage::class.java)
-                    mensaje?.let {
-                        val userId = it.createdBy
-                        userRef.document(userId).get()
-                            .addOnSuccessListener { userSnapshot ->
-                                val user = userSnapshot.toObject(Users::class.java)
-                                val username = user?.Nombre ?: "Unknown User"
-                                pregunta.value = forumMessage(username, it.createdAt, it.text)
-                            }
-                            .addOnFailureListener { exception ->
-                                Log.w("Firestore", "Error al obtener usuario: ", exception)
-                            }
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.w("Firestore", "Error al obtener la pregunta: ", exception)
-                }
-            // Una vez cargados los datos, desactivar la carga automática
-            loadData.value = false
+                }.awaitAll()
+            }
+            listaRespuestas.value = respuestasWithUsernames
+        } catch (e: Exception) {
+            Log.w("Firestore", "Error al obtener respuestas: ", e)
         }
+    }
+
+    // Function to fetch the original question
+    suspend fun fetchQuestion() {
+        try {
+            val documentSnapshot = firestore.collection("forum").document(preguntaId).get().await()
+            val mensaje = documentSnapshot.toObject(forumMessage::class.java)
+            mensaje?.let {
+                val userId = it.createdBy
+                val userSnapshot = userRef.document(userId).get().await()
+                val user = userSnapshot.toObject(Users::class.java)
+                val username = user?.Nombre ?: "Unknown User"
+                pregunta.value = forumMessage(username, it.createdAt, it.text)
+            }
+        } catch (e: Exception) {
+            Log.w("Firestore", "Error al obtener la pregunta: ", e)
+        }
+    }
+
+    LaunchedEffect(reloadRespuestas.value) {
+        fetchQuestion()
+        fetchReplies()
     }
 
     Scaffold(
@@ -127,7 +121,8 @@ fun RepliesScreen(navController: NavController, preguntaId: String) {
                     }
                 }
             )
-        }, bottomBar = {
+        },
+        bottomBar = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
@@ -143,8 +138,8 @@ fun RepliesScreen(navController: NavController, preguntaId: String) {
                                 addAnswer(preguntaId, nuevaRespuesta, userId)
                                 nuevaRespuesta = ""
                                 keyboardController?.hide()
+                                reloadRespuestas.value = !reloadRespuestas.value // Toggle the reload state
                             }
-                            loadData.value = true
                         }
                     ),
                     trailingIcon = {
@@ -155,9 +150,8 @@ fun RepliesScreen(navController: NavController, preguntaId: String) {
                                     addAnswer(preguntaId, nuevaRespuesta, userId)
                                     nuevaRespuesta = ""
                                     keyboardController?.hide()
-
+                                    reloadRespuestas.value = !reloadRespuestas.value // Toggle the reload state
                                 }
-                                loadData.value = true
                             },
                             modifier = Modifier.padding(8.dp)
                         ) {
@@ -179,29 +173,6 @@ fun RepliesScreen(navController: NavController, preguntaId: String) {
             }
         }
     ) {
-        /*Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFFF5F5DC)),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
-        ) {
-            if (pregunta.value == null) {
-                Text("Cargando pregunta...", style = MaterialTheme.typography.body2)
-            } else {
-                // Mostrar la pregunta original
-                MessageCard(null, pregunta.value!!, navController)
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            if (listaRespuestas.value.isEmpty()) {
-                Text("Cargando respuestas...", style = MaterialTheme.typography.body2)
-            } else {
-                listaRespuestas.value.forEach { (_, respuesta) ->
-                    MessageCard(null, respuesta, navController)
-                }
-            }
-        }*/
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -221,16 +192,15 @@ fun RepliesScreen(navController: NavController, preguntaId: String) {
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color(0xFFF5F5DC))
-                    .padding(horizontal = 16.dp), // Ajustar el padding según sea necesario
+                    .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.Top,
-                contentPadding = PaddingValues(vertical = 16.dp) // Ajustar el padding interno según sea necesario
+                contentPadding = PaddingValues(vertical = 16.dp)
             ) {
                 items(listaRespuestas.value) { (_, respuesta) ->
                     MessageCard(null, respuesta, navController)
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
-
         }
     }
 }
