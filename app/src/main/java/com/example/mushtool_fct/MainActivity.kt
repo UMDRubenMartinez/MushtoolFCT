@@ -86,8 +86,9 @@ fun MyApp() {
         bottomBar = {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
+            val excludedRoutes = listOf("auth", "foundedMushrooms","signup", "messages", "respuestas/{preguntaId}")
 
-            if (auth.currentUser != null && currentRoute != "auth" && currentRoute != "signup" && currentRoute != "messages" && currentRoute != "respuestas/{preguntaId}") {
+            if (auth.currentUser != null && currentRoute !in excludedRoutes) {
                 NavigationBar(
                     containerColor = Color(0xFF8BC34A), // Color de fondo del NavigationBar
                     contentColor = Color.White // Color del contenido (texto e iconos)
