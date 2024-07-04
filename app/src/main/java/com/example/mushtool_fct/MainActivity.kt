@@ -30,25 +30,29 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.mushtool_fct.Entity.MultiLanguage
 import com.example.mushtool_fct.Screen.Auth.AuthScreen
 import com.example.mushtool_fct.Screen.Auth.SignupScreen
 import com.example.mushtool_fct.Screen.ComunityScreens.ComunityScreen
 import com.example.mushtool_fct.Screen.ComunityScreens.MessagesMushtoolScreen
 import com.example.mushtool_fct.Screen.ComunityScreens.MushPhotosScreen
 import com.example.mushtool_fct.Screen.ComunityScreens.RepliesScreen
+import com.example.mushtool_fct.Screen.EatScreens.EatMushScreen
 import com.example.mushtool_fct.Screen.EatScreens.EatNowScreen
 import com.example.mushtool_fct.Screen.EatScreens.RecipesScreen
-import com.example.mushtool_fct.Screen.IdiomaManager
+import com.example.mushtool_fct.Screen.EatScreens.RestaurantScreen
+import com.example.mushtool_fct.Screen.Learn.FilesScreen
+import com.example.mushtool_fct.Screen.Learn.GameScreen
+import com.example.mushtool_fct.Screen.Learn.LearnScreen
+import com.example.mushtool_fct.Screen.Learn.MushscienceScreen
+import com.example.mushtool_fct.Screen.Learn.mushGlossary
 import com.example.mushtool_fct.Screen.MainScreen
 import com.example.mushtool_fct.Screen.MushroomScreen
-import com.example.mushtool_fct.Screen.EatScreens.RestaurantScreen
 import com.example.mushtool_fct.Screen.SearchScreens.SearchScreen
 import com.example.mushtool_fct.Screen.SearchScreens.foundedMushroomScreen
 import com.example.mushtool_fct.Screen.SearchScreens.whatIsScreen
 import com.example.mushtool_fct.Screen.SettingsScreen
 import com.example.mushtool_fct.Screen.WebScreen
-import com.example.mushtool_fct.Screen.Learn.*
-import com.example.mushtool_fct.Screen.EatScreens.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -60,8 +64,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MobileAds.initialize(this) {}
-        val idiomaGuardado = IdiomaManager.cargarIdiomaGuardado(this)
-        IdiomaManager.actualizarIdioma(idiomaGuardado, this)
+        val idiomaGuardado = MultiLanguage.IdiomaManager.cargarIdiomaGuardado(this)
+        MultiLanguage.IdiomaManager.actualizarIdioma(idiomaGuardado, this)
         setContent {
             MyApp()
         }
